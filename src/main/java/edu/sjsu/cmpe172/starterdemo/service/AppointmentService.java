@@ -41,6 +41,8 @@ public class AppointmentService
 
         System.out.println("INFO: Appointment booked successfully for slot " + slotId);
 
+        sendConfirmation(clientId);
+
         return "Appointment booked successfully";
     }
 
@@ -57,5 +59,11 @@ public class AppointmentService
     {
         failedBookings++;
         System.out.println("Failed bookings: " + failedBookings);
+    }
+
+    // notification service
+    public void sendConfirmation(int clientId)
+    {
+        System.out.println("Notification sent to client " + clientId);
     }
 }
