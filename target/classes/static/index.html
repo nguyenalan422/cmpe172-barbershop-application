@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barbershop Appointment System</title>
+    <style>
+        body
+        {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+
+        h1
+        {
+            color: #222;
+        }
+
+        .card
+        {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input, button
+        {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button
+        {
+            cursor: pointer;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        pre
+        {
+            background: #111;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Barbershop Appointment Scheduling System</h1>
+
+<div class="card">
+    <h2>View Data</h2>
+    <button onclick="loadAppointments()">View Appointments</button>
+    <button onclick="loadSlots()">View Slots</button>
+</div>
+
+<div class="card">
+    <h2>Book Appointment</h2>
+    <input id="clientId" placeholder="Client ID">
+    <input id="barberId" placeholder="Barber ID">
+    <input id="serviceId" placeholder="Service ID">
+    <input id="slotId" placeholder="Slot ID">
+    <button onclick="bookAppointment()">Book</button>
+</div>
+
+<div class="card">
+    <h2>Cancel Appointment</h2>
+    <input id="cancelAppointmentId" placeholder="Appointment ID">
+    <input id="cancelSlotId" placeholder="Slot ID">
+    <button onclick="cancelAppointment()">Cancel</button>
+</div>
+
+<div class="card">
+    <h2>Output</h2>
+    <pre id="output">Results will appear here...</pre>
+</div>
+
+<script>
+    function show(data)
+    {
+        document.getElementById("output").textContent =
+            typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    function loadAppointments()
+    {
+        fetch("/appointments")
+            .then(response => response.json())
+            .then(data => show(data));
+    }
+
+    function loadSlots()
+    {
+        fetch("/slots")
+            .then(response => response.json())
+            .then(data => show(data));
+    }
+
+    function bookAppointment()
+    {
+        const clientId = document.getElementById("clientId").value;
+        const barberId = document.getElementById("barberId").value;
+        const serviceId = document.getElementById("serviceId").value;
+        const slotId = document.getElementById("slotId").value;
+
+        fetch(`/appointments/book?clientId=${clientId}&barberId=${barberId}&serviceId=${serviceId}&slotId=${slotId}`, {
+            method: "POST"
+        })
+        .then(response => response.text())
+        .then(data => show(data));
+    }
+
+    function cancelAppointment()
+    {
+        const appointmentId = document.getElementById("cancelAppointmentId").value;
+        const slotId = document.getElementById("cancelSlotId").value;
+
+        fetch(`/appointments/cancel?appointmentId=${appointmentId}&slotId=${slotId}`,
+        {
+            method: "POST"
+        })
+        .then(response => response.text())
+        .then(data => show(data));
+    }
+</script>
+
+</body>
+</html>
