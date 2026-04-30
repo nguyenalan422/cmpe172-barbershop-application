@@ -51,4 +51,14 @@ public class AppointmentRepository
 
         jdbcTemplate.update(sql, clientId, barberId, serviceId, slotId);
     }
+
+    public int cancelAppointment(int appointmentId) {
+        String sql = """
+            UPDATE appointments
+            SET status = 'CANCELLED'
+            WHERE appointment_id = ? AND status = 'BOOKED'
+            """;
+
+        return jdbcTemplate.update(sql, appointmentId);
+    }
 }

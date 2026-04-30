@@ -46,6 +46,24 @@ public class AppointmentService
         return "Appointment booked successfully";
     }
 
+    @Transactional
+    public String cancelAppointment(int appointmentId, int slotId)
+    {
+        int updatedRows = appointmentRepository.cancelAppointment(appointmentId);
+
+        if (updatedRows == 0)
+        {
+            return "Appointment is already cancelled or does not exist";
+        }
+
+        availabilitySlotRepository.reopenSlot(slotId);
+
+        System.out.println("INFO: Appointment " + appointmentId + " cancelled");
+        System.out.println("INFO: Slot " + slotId + " reopened");
+
+        return "Appointment cancelled successfully";
+    }
+
     public void logExamples()
     {
         System.out.println("INFO: Appointment booked successfully");

@@ -34,6 +34,13 @@ public class AppointmentController
         return appointmentService.bookAppointment(clientId, barberId, serviceId, slotId);
     }
 
+    @PostMapping("/appointments/cancel")
+    public String cancelAppointment(@RequestParam int appointmentId,
+                                    @RequestParam int slotId)
+    {
+        return appointmentService.cancelAppointment(appointmentId, slotId);
+    }
+
     @PostMapping("/appointments/sendConfirmation")
     public String sendConfirmation()
     {

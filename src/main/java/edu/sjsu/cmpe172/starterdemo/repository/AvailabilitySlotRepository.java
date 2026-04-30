@@ -41,4 +41,14 @@ public class AvailabilitySlotRepository
 
         return jdbcTemplate.update(sql, slotId);
     }
+
+    public int reopenSlot(int slotId) {
+        String sql = """
+            UPDATE availability_slots
+            SET status = 'AVAILABLE'
+            WHERE slot_id = ?
+            """;
+
+        return jdbcTemplate.update(sql, slotId);
+    }
 }
