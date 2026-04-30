@@ -84,4 +84,9 @@ public class AppointmentService
     {
         System.out.println("Notification sent to client " + clientId);
     }
+
+    public Appointment getAppointmentById(int appointmentId)
+    {
+        return appointmentRepository.findById(appointmentId);
+    }
 }

@@ -3,7 +3,6 @@ package edu.sjsu.cmpe172.starterdemo.repository;
 import edu.sjsu.cmpe172.starterdemo.model.Appointment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -60,5 +59,33 @@ public class AppointmentRepository
             """;
 
         return jdbcTemplate.update(sql, appointmentId);
+    }
+
+    public Appointment findById(int appointmentId)
+    {
+        String sql = """
+            SELECT appointment_id,
+                   client_id,
+                   barber_id,
+                   service_id,
+                   slot_id,
+                   status,
+                   time_booked
+            FROM appointments
+            WHERE appointment_id = ?
+            """;
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                        new Appointment(
+                                rs.getInt("appointment_id"),
+                                rs.getInt("client_id"),
+                                rs.getInt("barber_id"),
+                                rs.getInt("service_id"),
+                                rs.getInt("slot_id"),
+                                rs.getString("status"),
+                                rs.getString("time_booked")
+                        ),
+                appointmentId
+        );
     }
 }

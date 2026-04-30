@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -45,5 +46,11 @@ public class AppointmentController
     public String sendConfirmation()
     {
         return "Calling Notification Service...";
+    }
+
+    @GetMapping("/appointments/{id}")
+    public Appointment getAppointmentById(@PathVariable int id)
+    {
+        return appointmentService.getAppointmentById(id);
     }
 }
