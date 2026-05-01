@@ -1,104 +1,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Barbershop Appointment System</title>
+    <title>Barbershop Appointment Scheduler</title>
     <style>
         body
         {
             font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f5f5;
+            margin: 0;
+            background: #f5f5f5;
         }
 
-        h1
+        .header
         {
-            color: #222;
+            background: #7b2cff;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container
+        {
+            width: 90%;
+            margin: 30px auto;
         }
 
         .card
         {
             background: white;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-bottom: 22px;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        h2
+        {
+            margin-top: 0;
         }
 
         input, button
         {
             padding: 10px;
-            margin: 5px;
+            margin: 6px;
         }
 
         button
         {
             cursor: pointer;
-            background-color: #222;
+            background-color: #7b2cff;
             color: white;
             border: none;
             border-radius: 5px;
+            font-weight: bold;
         }
 
-        pre
+        button:hover
         {
-            background: #111;
-            color: #0f0;
-            padding: 15px;
-            border-radius: 8px;
+            background-color: #5f1fd1;
+        }
+
+        .output-box
+        {
+            padding: 10px;
+            min-height: 120px;
+            text-align: left;
             overflow-x: auto;
+        }
+
+        table
+        {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            color: black;
+        }
+
+        th, td
+        {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th
+        {
+            background: #7b2cff;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-<h1>Barbershop Appointment Scheduling System</h1>
+<div class="header">Barbershop Appointment Scheduler</div>
 
-<div class="card">
-    <h2>View Data</h2>
-    <button onclick="loadAppointments()">View Appointments</button>
-    <button onclick="loadSlots()">View Slots</button>
-</div>
+<div class="container">
 
-<div class="card">
-    <h2>Book Appointment</h2>
-    <input id="clientId" placeholder="Client ID">
-    <input id="barberId" placeholder="Barber ID">
-    <input id="serviceId" placeholder="Service ID">
-    <input id="slotId" placeholder="Slot ID">
-    <button onclick="bookAppointment()">Book</button>
-</div>
+    <div class="card">
+        <h2>View Availability Slots</h2>
 
-<div class="card">
-    <h2>Cancel Appointment</h2>
-    <input id="cancelAppointmentId" placeholder="Appointment ID">
-    <input id="cancelSlotId" placeholder="Slot ID">
-    <button onclick="cancelAppointment()">Cancel</button>
-</div>
+        <button onclick="loadSlots()">View Slots</button>
+        <button onclick="loadAppointments()">View Appointments</button>
+    </div>
 
-<div class="card">
-    <h2>Output</h2>
-    <pre id="output">Results will appear here...</pre>
+    <div class="card">
+        <h2>Book Appointment</h2>
+
+        <input id="clientId" placeholder="Client ID">
+        <input id="barberId" placeholder="Barber ID">
+        <input id="serviceId" placeholder="Service ID">
+        <input id="slotId" placeholder="Slot ID">
+
+        <button onclick="bookAppointment()">Book Appointment</button>
+    </div>
+
+    <div class="card">
+        <h2>Cancel Appointment</h2>
+
+        <input id="cancelAppointmentId" placeholder="Appointment ID">
+        <input id="cancelSlotId" placeholder="Slot ID">
+
+        <button onclick="cancelAppointment()">Cancel Appointment</button>
+    </div>
+
+    <div class="card">
+        <h2>System Output</h2>
+
+        <div id="output" class="output-box">Results will appear here...</div>
+    </div>
+
 </div>
 
 <script>
-    function show(data)
+    function showMessage(message)
     {
-        document.getElementById("output").textContent =
-            typeof data === "string" ? data : JSON.stringify(data, null, 2);
+        document.getElementById("output").textContent = message;
+    }
+
+    function showSlots(slots)
+    {
+        let html = `
+            <table>
+                <tr>
+                    <th>Slot ID</th>
+                    <th>Barber ID</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                </tr>
+        `;
+
+        slots.forEach(slot =>
+        {
+            html += `
+                <tr>
+                    <td>${slot.slotId}</td>
+                    <td>${slot.barberId}</td>
+                    <td>${slot.startTime} AM</td>
+                    <td>${slot.endTime} AM</td>
+                    <td>${slot.status}</td>
+                </tr>
+            `;
+        });
+
+        html += `</table>`;
+
+        document.getElementById("output").innerHTML = html;
+    }
+
+    function showAppointments(appointments)
+    {
+        let html = `
+            <table>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Client ID</th>
+                    <th>Barber ID</th>
+                    <th>Service ID</th>
+                    <th>Slot ID</th>
+                    <th>Status</th>
+                    <th>Time Booked</th>
+                </tr>
+        `;
+
+        appointments.forEach(appointment =>
+        {
+            html += `
+                <tr>
+                    <td>${appointment.appointmentId}</td>
+                    <td>${appointment.clientId}</td>
+                    <td>${appointment.barberId}</td>
+                    <td>${appointment.serviceId}</td>
+                    <td>${appointment.slotId}</td>
+                    <td>${appointment.status}</td>
+                    <td>${appointment.timeBooked}</td>
+                </tr>
+            `;
+        });
+
+        html += `</table>`;
+
+        document.getElementById("output").innerHTML = html;
     }
 
     function loadAppointments()
     {
         fetch("/appointments")
             .then(response => response.json())
-            .then(data => show(data));
+            .then(data => showAppointments(data));
     }
 
     function loadSlots()
     {
         fetch("/slots")
             .then(response => response.json())
-            .then(data => show(data));
+            .then(data => showSlots(data));
     }
 
     function bookAppointment()
@@ -108,11 +226,18 @@
         const serviceId = document.getElementById("serviceId").value;
         const slotId = document.getElementById("slotId").value;
 
-        fetch(`/appointments/book?clientId=${clientId}&barberId=${barberId}&serviceId=${serviceId}&slotId=${slotId}`, {
+        if (!clientId || !barberId || !serviceId || !slotId)
+        {
+            showMessage("Please enter Client ID, Barber ID, Service ID, and Slot ID.");
+            return;
+        }
+
+        fetch(`/appointments/book?clientId=${clientId}&barberId=${barberId}&serviceId=${serviceId}&slotId=${slotId}`,
+        {
             method: "POST"
         })
         .then(response => response.text())
-        .then(data => show(data));
+        .then(data => showMessage(data));
     }
 
     function cancelAppointment()
@@ -120,12 +245,18 @@
         const appointmentId = document.getElementById("cancelAppointmentId").value;
         const slotId = document.getElementById("cancelSlotId").value;
 
+        if (!appointmentId || !slotId)
+        {
+            showMessage("Please enter Appointment ID and Slot ID.");
+            return;
+        }
+
         fetch(`/appointments/cancel?appointmentId=${appointmentId}&slotId=${slotId}`,
         {
             method: "POST"
         })
         .then(response => response.text())
-        .then(data => show(data));
+        .then(data => showMessage(data));
     }
 </script>
 
