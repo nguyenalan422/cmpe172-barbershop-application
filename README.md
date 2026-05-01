@@ -253,4 +253,7 @@ Possible future enhancements:
 Alan Nguyen
 
 CMPE 172 Enterprise Software
+
 San Jose State University
+
+Spring 2026
